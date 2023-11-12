@@ -56,4 +56,16 @@ public class GatherInput : MonoBehaviour
     {
         jumpInput = false;
     }
+
+    public void DisableControls()
+    {
+        playerControls.Player.Move.performed -= StartMove;
+        playerControls.Player.Move.canceled -= StartMove;
+
+        playerControls.Player.Jump.performed -= JumpStart;
+        playerControls.Player.Jump.canceled -= JumpStart;
+
+        playerControls.Player.Disable();
+        valueX = 0;
+    }
 }
