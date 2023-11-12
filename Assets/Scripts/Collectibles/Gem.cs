@@ -22,6 +22,8 @@ public class Gem : MonoBehaviour
         {
             //Destroy(gameObject);
 
+            other.GetComponent<PlayerCollectibles>().GemCollected();
+
             // More performance heavy
             GetComponent<AudioSource>().Play();
             GetComponent<SpriteRenderer>().enabled = false;
