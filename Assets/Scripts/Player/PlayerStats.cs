@@ -1,16 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
     public float maxHealth = 100f, health;
     public bool canBeDamaged = true;
 
+    public Animator playerAnim;
+    private PlayerMoveControls playerMove;
+
+    public Image healthUI;
+
     // Start is called before the first frame update
     void Start()
     {
         health = maxHealth;
+        playerMove = GetComponentInParent<PlayerMoveControls>();
+        playerAnim = GetComponentInParent<Animator>();
+        UpdateHealthUI();
     }
 
     // Update is called once per frame
@@ -24,11 +33,13 @@ public class PlayerStats : MonoBehaviour
         if(canBeDamaged)
         {
             health -= damage;
-            // play hurt animation
+            playerAnim.SetBool("damaged", true);
+            playerMove.hasControl = false;
+
+            UpdateHealthUI();
 
             if (health <= 0)
             {
-                Debug.Log("DEATH");
                 GetComponent<PolygonCollider2D>().enabled = false;
                 GetComponentInParent<GatherInput>().DisableControls();
             }
@@ -36,6 +47,20 @@ public class PlayerStats : MonoBehaviour
             StartCoroutine(DamagePrevention());
         }
     }
+
+    public void HealPlayer(float healAmount)
+    {
+        if(health + healAmount > maxHealth)
+        {
+            health = maxHealth;
+        } else
+        {
+            health += healAmount;
+        }
+
+        UpdateHealthUI();
+    }
+
 
     public IEnumerator DamagePrevention()
     {
@@ -45,9 +70,16 @@ public class PlayerStats : MonoBehaviour
         if(health > 0)
         {
             canBeDamaged = true;
+            playerMove.hasControl = true;
+            playerAnim.SetBool("damaged", false);
         } else
         {
-            // play death animation
+            playerAnim.SetBool("death", true);
         }
+    }
+
+    public void UpdateHealthUI()
+    {
+        healthUI.fillAmount = health / maxHealth;
     }
 }

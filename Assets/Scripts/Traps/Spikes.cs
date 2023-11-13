@@ -5,6 +5,7 @@ using UnityEngine;
 public class Spikes : MonoBehaviour
 {
     public float damage = 10f;
+    public float forceX = 8f, forceY = 5f, duration = 0.15f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,5 +22,8 @@ public class Spikes : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D other)
     {
         other.GetComponent<PlayerStats>().TakeDamage(damage);
+        PlayerMoveControls playerMove = other.GetComponentInParent<PlayerMoveControls>();
+
+        StartCoroutine(playerMove.KnockbackPlayer(forceX, forceY, duration, transform));
     }
 }

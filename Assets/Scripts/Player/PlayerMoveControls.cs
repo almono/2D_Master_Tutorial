@@ -16,6 +16,8 @@ public class PlayerMoveControls : MonoBehaviour
     public LayerMask groundLayer;
     public Transform leftPoint, rightPoint;
     private bool grounded = true;
+    private bool isKnockbacked = false;
+    public bool hasControl = true;
 
     public int additionalJumps = 3;
     private int resetJumpsNumber;
@@ -39,8 +41,12 @@ public class PlayerMoveControls : MonoBehaviour
     void FixedUpdate()
     {
         CheckStatus();
-        Move();
-        Jump();
+
+        if(!isKnockbacked && hasControl)
+        {
+            Move();
+            Jump();
+        }
     }
 
     void Move()
@@ -107,5 +113,22 @@ public class PlayerMoveControls : MonoBehaviour
 
         Debug.DrawRay(leftPoint.position, Vector2.down * rayLength, color1);
         Debug.DrawRay(rightPoint.position, Vector2.down * rayLength, color2);
+    }
+
+    public IEnumerator KnockbackPlayer(float forceX, float forceY, float duration, Transform otherObject)
+    {
+        int knockbackDirection = (transform.position.x < otherObject.position.x) ? -1 : 1;
+
+        isKnockbacked = true;
+
+        // reset all forces/velocities/movements on player
+        rB.velocity = Vector2.zero;
+
+        Vector2 knockbackForce = new Vector2(knockbackDirection * forceX, forceY);
+        rB.AddForce(knockbackForce, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(duration);
+
+        isKnockbacked = false;
+        rB.velocity = Vector2.zero; // make sure we reset forces back after knockback ends
     }
 }
