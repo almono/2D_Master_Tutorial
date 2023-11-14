@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - GemUI
+  - PlayerStats
   layers:
   - Default
   - TransparentFX
@@ -53,6 +54,9 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 3477585205
+    locked: 0
+  - name: Enemy
+    uniqueID: 1528443931
     locked: 0
   - name: Player
     uniqueID: 1933027339
