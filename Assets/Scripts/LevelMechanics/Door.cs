@@ -6,17 +6,7 @@ using UnityEngine.SceneManagement;
 public class Door : MonoBehaviour
 {
     public int levelToLoad;
-    //public string levelNameToLoad;
-
-    public void LoadLevel()
-    {
-        SceneManager.LoadScene(levelToLoad);
-    }
-
-    public void RestartLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+    public Fader fader;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -26,7 +16,7 @@ public class Door : MonoBehaviour
             GetComponent<BoxCollider2D>().enabled = false;
             other.GetComponent<GatherInput>().DisableControls();
 
-            LoadLevel();
+            fader.SetLevel(levelToLoad);
         }
     }
 }
