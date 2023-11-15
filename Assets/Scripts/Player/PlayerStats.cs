@@ -42,6 +42,7 @@ public class PlayerStats : MonoBehaviour
             {
                 GetComponent<PolygonCollider2D>().enabled = false;
                 GetComponentInParent<GatherInput>().DisableControls();
+                GameManager.RestartLevel();
             }
 
             StartCoroutine(DamagePrevention());

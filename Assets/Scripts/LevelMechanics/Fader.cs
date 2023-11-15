@@ -12,6 +12,8 @@ public class Fader : MonoBehaviour
     void Start()
     {
         fadeAnim = GetComponent<Animator>();
+
+        GameManager.RegisterFader(this);
     }
 
     // Update is called once per frame
