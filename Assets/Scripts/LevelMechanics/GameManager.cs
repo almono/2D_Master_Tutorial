@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance; // static stays in memory until game is closed
     private Fader fader;
+    private Door door;
+    public List<Gem> gemsList;
 
     private void Awake()
     {
@@ -17,11 +19,23 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        gemsList = new List<Gem>();
     }
 
     private void Start()
     {
         
+    }
+
+    public static void RegisterDoor(Door door)
+    {
+        if (instance == null)
+        {
+            return;
+        }
+
+        instance.door = door;
     }
 
     public static void RegisterFader(Fader fd)
@@ -51,6 +65,38 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        instance.gemsList.Clear();
         instance.fader.RestartLevel();
+    }
+
+    public static void RegisterGem(Gem gem)
+    {
+        if(instance == null)
+        {
+            return;
+        }
+
+        if(!instance.gemsList.Contains(gem))
+        {
+            instance.gemsList.Add(gem);
+        }
+    }
+
+    public static void RemoveGemFromList(Gem gem)
+    {
+        if (instance == null)
+        {
+            return;
+        }
+
+        if (instance.gemsList.Contains(gem))
+        {
+            instance.gemsList.Remove(gem);
+
+            if(instance.gemsList.Count <= 0)
+            {
+                instance.door.UnlockDoor();
+            }
+        }
     }
 }

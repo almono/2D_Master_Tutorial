@@ -7,7 +7,7 @@ public class Gem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameManager.RegisterGem(this);
     }
 
     // Update is called once per frame
@@ -28,6 +28,8 @@ public class Gem : MonoBehaviour
             GetComponent<AudioSource>().Play();
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<CircleCollider2D>().enabled = false;
+
+            GameManager.RemoveGemFromList(this);
         }
     }
 }
