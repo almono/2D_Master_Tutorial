@@ -16,7 +16,20 @@ public class PlayerStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        health = maxHealth;
+        //health = PlayerPrefs.GetFloat("Player_Health", maxHealth); 2nd parameter is default value if it doesnt exist
+        if(PlayerPrefs.HasKey("Player_Health"))
+        {
+            health = PlayerPrefs.GetFloat("Player_Health");
+
+            if(health < 0 || health > maxHealth)
+            {
+                health = maxHealth;
+            }
+        } else
+        {
+            health = maxHealth;
+        }
+
         playerMove = GetComponentInParent<PlayerMoveControls>();
         playerAnim = GetComponentInParent<Animator>();
         UpdateHealthUI();
@@ -42,6 +55,7 @@ public class PlayerStats : MonoBehaviour
             {
                 GetComponent<PolygonCollider2D>().enabled = false;
                 GetComponentInParent<GatherInput>().DisableControls();
+                PlayerPrefs.SetFloat("Player_Health", maxHealth); // restart health to max on death
                 GameManager.RestartLevel();
             }
 
@@ -82,5 +96,10 @@ public class PlayerStats : MonoBehaviour
     public void UpdateHealthUI()
     {
         healthUI.fillAmount = health / maxHealth;
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteKey("Player_Health"); // also when we go to main menu
     }
 }

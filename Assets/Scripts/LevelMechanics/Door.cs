@@ -23,6 +23,10 @@ public class Door : MonoBehaviour
             doorCollider.enabled = false;
             other.GetComponent<GatherInput>().DisableControls();
 
+            // save player health for next level
+            PlayerStats playerStats = other.GetComponentInChildren<PlayerStats>();
+            PlayerPrefs.SetFloat("Player_Health", playerStats.health);
+
             //fader.SetLevel(levelToLoad);
             GameManager.LoadLevel(levelToLoad);
         }
