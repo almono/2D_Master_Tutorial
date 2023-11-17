@@ -16,7 +16,7 @@ public class PlayerMoveControls : MonoBehaviour
     public LayerMask groundLayer;
     public Transform leftPoint, rightPoint;
     private bool grounded = true;
-    private bool isKnockbacked = false;
+    public bool isKnockbacked = false;
     public bool hasControl = true;
 
     public int additionalJumps = 3;

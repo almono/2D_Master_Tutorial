@@ -10,6 +10,8 @@ public class GatherInput : MonoBehaviour
     public float valueX;
     public bool jumpInput;
 
+    public bool tryAttack;
+
     void Awake()
     {
         playerControls = new Controls();
@@ -23,6 +25,9 @@ public class GatherInput : MonoBehaviour
         playerControls.Player.Jump.performed += JumpStart;
         playerControls.Player.Jump.canceled += JumpStart;
 
+        playerControls.Player.MeleeAttack.performed += TryToAttack;
+        playerControls.Player.MeleeAttack.canceled += StopTryToAttack;
+
         playerControls.Player.Enable();
     }
 
@@ -33,6 +38,9 @@ public class GatherInput : MonoBehaviour
 
         playerControls.Player.Jump.performed -= JumpStart;
         playerControls.Player.Jump.canceled -= JumpStart;
+
+        playerControls.Player.MeleeAttack.performed -= TryToAttack;
+        playerControls.Player.MeleeAttack.canceled -= StopTryToAttack;
 
         playerControls.Player.Disable();
     }
@@ -57,6 +65,16 @@ public class GatherInput : MonoBehaviour
         jumpInput = false;
     }
 
+    private void TryToAttack(InputAction.CallbackContext ctx)
+    {
+        tryAttack = true;
+    }
+
+    private void StopTryToAttack(InputAction.CallbackContext ctx)
+    {
+        tryAttack = false;
+    }
+
     public void DisableControls()
     {
         playerControls.Player.Move.performed -= StartMove;
@@ -64,6 +82,9 @@ public class GatherInput : MonoBehaviour
 
         playerControls.Player.Jump.performed -= JumpStart;
         playerControls.Player.Jump.canceled -= JumpStart;
+
+        playerControls.Player.MeleeAttack.performed -= TryToAttack;
+        playerControls.Player.MeleeAttack.canceled -= StopTryToAttack;
 
         playerControls.Player.Disable();
         valueX = 0;

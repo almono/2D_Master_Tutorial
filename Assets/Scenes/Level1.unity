@@ -11049,7 +11049,8 @@ PrefabInstance:
       propertyPath: gemCountText
       value: 
       objectReference: {fileID: 2065666721}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6480345754634239861, guid: 704696a1a23a7d547843fc13620c2ba9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

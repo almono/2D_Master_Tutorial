@@ -10,6 +10,7 @@ public class PlayerStats : MonoBehaviour
 
     public Animator playerAnim;
     private PlayerMoveControls playerMove;
+    private PlayerAttackControls playerAttack;
 
     public Image healthUI;
 
@@ -32,6 +33,7 @@ public class PlayerStats : MonoBehaviour
 
         playerMove = GetComponentInParent<PlayerMoveControls>();
         playerAnim = GetComponentInParent<Animator>();
+        playerAttack = GetComponentInParent<PlayerAttackControls>();
         UpdateHealthUI();
     }
 
@@ -50,6 +52,7 @@ public class PlayerStats : MonoBehaviour
             playerMove.hasControl = false;
 
             UpdateHealthUI();
+            playerAttack.ResetAttack();
 
             if (health <= 0)
             {
