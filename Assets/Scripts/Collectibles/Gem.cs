@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Gem : MonoBehaviour
 {
+    public GameObject gemParticles;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +29,8 @@ public class Gem : MonoBehaviour
             GetComponent<AudioSource>().Play();
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<CircleCollider2D>().enabled = false;
+
+            Instantiate(gemParticles, transform.position, transform.rotation);
 
             GameManager.RemoveGemFromList(this);
         }
