@@ -25,9 +25,21 @@ public class Enemy : MonoBehaviour
     {
         health -= damage;
 
+        HurtSequence();
+
         if(health <= 0)
         {
-            Destroy(gameObject);
+            DeathSequence();
         }
+    }
+
+    public virtual void HurtSequence()
+    {
+
+    }
+
+    public virtual void DeathSequence()
+    {
+
     }
 }

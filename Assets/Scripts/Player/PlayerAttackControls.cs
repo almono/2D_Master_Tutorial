@@ -10,6 +10,7 @@ public class PlayerAttackControls : MonoBehaviour
 
     public bool attackStarted = false;
     public PolygonCollider2D meleeAttackCollider;
+    public AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +44,7 @@ public class PlayerAttackControls : MonoBehaviour
     public void ActivateAttack()
     {
         meleeAttackCollider.enabled = true;
+        audioSource.Play();
     }
 
     public void ResetAttack()
@@ -52,5 +54,6 @@ public class PlayerAttackControls : MonoBehaviour
         gI.tryAttack = false;
         attackStarted = false;
         meleeAttackCollider.enabled = false;
+        audioSource.Stop();
     }
 }

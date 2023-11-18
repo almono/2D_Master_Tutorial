@@ -40,6 +40,20 @@ public class PatrollingEnemy : Enemy
         }
     }
 
+    public override void HurtSequence()
+    {
+        enemyAnim.SetTrigger("hurt");
+    }
+
+    public override void DeathSequence()
+    {
+        enemyAnim.SetTrigger("death");
+        speed = 0f;
+        GetComponent<CapsuleCollider2D>().enabled = false;
+        GetComponentInChildren<PolygonCollider2D>().enabled = false;
+        enemyBody.gravityScale = 0f;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
