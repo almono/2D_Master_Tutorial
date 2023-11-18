@@ -19,8 +19,14 @@ public class PlayerMoveControls : MonoBehaviour
     public bool isKnockbacked = false;
     public bool hasControl = true;
 
+    public bool onLadder = false;
+    public float climbSpeed = 3f;
+    public float climbHorizontalSpeed = 1f;
+
     public int additionalJumps = 3;
     private int resetJumpsNumber;
+
+    private float startGravity;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +34,7 @@ public class PlayerMoveControls : MonoBehaviour
         gI = GetComponent<GatherInput>();
         rB = GetComponent<Rigidbody2D>();
         playerAnim = GetComponent<Animator>();
+        startGravity = rB.gravityScale;
 
         resetJumpsNumber = additionalJumps;
     }
@@ -53,17 +60,40 @@ public class PlayerMoveControls : MonoBehaviour
     {
         Flip();
         rB.velocity = new Vector2(speed * gI.valueX, rB.velocity.y);
+
+        if(onLadder)
+        {
+            rB.gravityScale = 0f;
+            rB.velocity = new Vector2(climbHorizontalSpeed * gI.valueX, climbSpeed * gI.valueY);
+
+            if(rB.velocity.y == 0)
+            {
+                playerAnim.enabled = false; // stop climbing animation if not moving on ladder
+            } else
+            {
+                playerAnim.enabled = true;
+            }
+        }
+    }
+
+    public void ExitLadder()
+    {
+        rB.gravityScale = startGravity;
+        onLadder = false;
+        playerAnim.enabled = true;
     }
 
     void Jump()
     {
         if (gI.jumpInput)
         {
-            if (grounded)
+            if (grounded || onLadder)
             {
+                ExitLadder();
                 rB.velocity = new Vector2(gI.valueX * speed, jumpForce);
             } else if (additionalJumps > 0)
             {
+                ExitLadder();
                 rB.velocity = new Vector2(gI.valueX * speed, jumpForce * 0.6f);
                 additionalJumps--;
             }
@@ -87,6 +117,7 @@ public class PlayerMoveControls : MonoBehaviour
         playerAnim.SetFloat("speed", Mathf.Abs(rB.velocity.x));
         playerAnim.SetFloat("vspeed", rB.velocity.y);
         playerAnim.SetBool("grounded", grounded);
+        playerAnim.SetBool("isClimbing", onLadder);
     }
 
     private void CheckStatus()

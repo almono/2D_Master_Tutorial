@@ -12,6 +12,10 @@ public class GatherInput : MonoBehaviour
 
     public bool tryAttack;
 
+    // for ladders
+    public float valueY;
+    public bool tryingToClimb;
+
     void Awake()
     {
         playerControls = new Controls();
@@ -28,6 +32,9 @@ public class GatherInput : MonoBehaviour
         playerControls.Player.MeleeAttack.performed += TryToAttack;
         playerControls.Player.MeleeAttack.canceled += StopTryToAttack;
 
+        playerControls.Player.Climb.performed += ClimbStart;
+        playerControls.Player.Climb.canceled += StopClimbing;
+
         playerControls.Player.Enable();
     }
 
@@ -41,6 +48,9 @@ public class GatherInput : MonoBehaviour
 
         playerControls.Player.MeleeAttack.performed -= TryToAttack;
         playerControls.Player.MeleeAttack.canceled -= StopTryToAttack;
+
+        playerControls.Player.Climb.performed -= ClimbStart;
+        playerControls.Player.Climb.canceled -= StopClimbing;
 
         playerControls.Player.Disable();
     }
@@ -75,6 +85,24 @@ public class GatherInput : MonoBehaviour
         tryAttack = false;
     }
 
+    private void ClimbStart(InputAction.CallbackContext ctx)
+    {
+        valueY = Mathf.RoundToInt(ctx.ReadValue<float>()); // get axis values
+
+        // check if we are pressing climb buttons
+        // absolute is used in case we are climbing down
+        if(Mathf.Abs(valueY) > 0)
+        {
+            tryingToClimb = true;
+        }
+    }
+
+    private void StopClimbing(InputAction.CallbackContext ctx)
+    {
+        tryingToClimb = false;
+        valueY = 0;
+    }
+
     public void DisableControls()
     {
         playerControls.Player.Move.performed -= StartMove;
@@ -85,6 +113,9 @@ public class GatherInput : MonoBehaviour
 
         playerControls.Player.MeleeAttack.performed -= TryToAttack;
         playerControls.Player.MeleeAttack.canceled -= StopTryToAttack;
+
+        playerControls.Player.Climb.performed -= ClimbStart;
+        playerControls.Player.Climb.canceled -= StopClimbing;
 
         playerControls.Player.Disable();
         valueX = 0;

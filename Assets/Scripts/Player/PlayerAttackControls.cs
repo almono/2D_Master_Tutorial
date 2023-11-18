@@ -31,7 +31,10 @@ public class PlayerAttackControls : MonoBehaviour
         if (gI.tryAttack)
         {
             // check if we are already attacking
-            if(attackStarted || playerMoveControls.hasControl == false || playerMoveControls.isKnockbacked)
+            // must have controls enabled
+            // cant be in knockback state
+            // cant be on ladder
+            if(attackStarted || playerMoveControls.hasControl == false || playerMoveControls.isKnockbacked || playerMoveControls.onLadder)
             {
                 return;
             }
