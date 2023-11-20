@@ -15,6 +15,7 @@ public class GatherInput : MonoBehaviour
     // for ladders
     public float valueY;
     public bool tryingToClimb;
+    private bool isPaused = false;
 
     void Awake()
     {
@@ -35,6 +36,8 @@ public class GatherInput : MonoBehaviour
         playerControls.Player.Climb.performed += ClimbStart;
         playerControls.Player.Climb.canceled += StopClimbing;
 
+        playerControls.Player.Pause.performed += PauseGame;
+
         playerControls.Player.Enable();
     }
 
@@ -51,6 +54,8 @@ public class GatherInput : MonoBehaviour
 
         playerControls.Player.Climb.performed -= ClimbStart;
         playerControls.Player.Climb.canceled -= StopClimbing;
+
+        playerControls.Player.Pause.performed -= PauseGame;
 
         playerControls.Player.Disable();
     }
@@ -119,5 +124,22 @@ public class GatherInput : MonoBehaviour
 
         playerControls.Player.Disable();
         valueX = 0;
+    }
+
+    public void PauseGame(InputAction.CallbackContext ctx)
+    {
+        isPaused = !isPaused;
+
+        if(isPaused)
+        {
+            AudioListener.pause = true;
+            Time.timeScale = 0;
+            playerControls.Player.Disable();
+        } else
+        {
+            AudioListener.pause = false;
+            Time.timeScale = 1;
+            playerControls.Player.Enable();
+        }
     }
 }
