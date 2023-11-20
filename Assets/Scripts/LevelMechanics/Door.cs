@@ -29,6 +29,7 @@ public class Door : MonoBehaviour
 
             //fader.SetLevel(levelToLoad);
             GameManager.LoadLevel(levelToLoad);
+            PlayerPrefs.SetInt("Saved_Level", levelToLoad);
         }
     }
 
