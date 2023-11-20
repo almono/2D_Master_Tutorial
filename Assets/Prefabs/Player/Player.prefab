@@ -259,6 +259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ad0e5ba8537c74ba34e4ec9ef230bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destructibleItemLayer: 0
 --- !u!1 &8218935536902377361
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,7 +324,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -469,6 +470,9 @@ MonoBehaviour:
   rightPoint: {fileID: 3791542380014487447}
   isKnockbacked: 0
   hasControl: 1
+  onLadder: 0
+  climbSpeed: 3
+  climbHorizontalSpeed: 3
   additionalJumps: 4
 --- !u!114 &6196107305872468472
 MonoBehaviour:
@@ -485,6 +489,8 @@ MonoBehaviour:
   valueX: 0
   jumpInput: 0
   tryAttack: 0
+  valueY: 0
+  tryingToClimb: 0
 --- !u!95 &8281987265721609947
 Animator:
   serializedVersion: 5
@@ -534,3 +540,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackStarted: 0
   meleeAttackCollider: {fileID: 3457490091657084711}
+  audioSource: {fileID: 0}
