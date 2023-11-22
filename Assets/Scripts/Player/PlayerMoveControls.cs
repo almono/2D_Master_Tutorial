@@ -16,8 +16,7 @@ public class PlayerMoveControls : MonoBehaviour
     public LayerMask groundLayer;
     public Transform leftPoint, rightPoint;
 
-    [SerializeField]
-    private bool grounded = true;
+    [SerializeField]  private bool grounded = true;
     public bool isKnockbacked = false;
     public bool hasControl = true;
 
@@ -29,6 +28,10 @@ public class PlayerMoveControls : MonoBehaviour
     private int resetJumpsNumber;
 
     private float startGravity;
+
+    public Transform wallSlidePoint;
+    public float wallSlideSpeed = 2f;
+    [SerializeField]  private bool isWallSliding = false;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +57,7 @@ public class PlayerMoveControls : MonoBehaviour
         if(!isKnockbacked && hasControl)
         {
             Move();
+            WallSlide();
             Jump();
         }
     }
@@ -127,6 +131,7 @@ public class PlayerMoveControls : MonoBehaviour
         playerAnim.SetFloat("vspeed", rB.velocity.y);
         playerAnim.SetBool("grounded", grounded);
         playerAnim.SetBool("isClimbing", onLadder);
+        //playerAnim.SetBool("isWallSliding", isWallSliding);
     }
 
     private void CheckStatus()
@@ -143,7 +148,31 @@ public class PlayerMoveControls : MonoBehaviour
             grounded = false;
         }
 
+        RaycastHit2D wallSlideHit = Physics2D.Raycast(wallSlidePoint.position, isFacingRight * Vector2.right, 0.1f, groundLayer);
+
+        if(wallSlideHit && !grounded)
+        {
+            if(gI.tryToWalSlide)
+            {
+                isWallSliding = true;
+            } else
+            {
+                isWallSliding = false;
+            }
+        } else
+        {
+            isWallSliding = false;
+        }
+
         SeeRays(leftCheckHit, rightCheckHit);
+    }
+
+    private void WallSlide()
+    {
+        if(isWallSliding)
+        {
+            rB.velocity = new Vector2(rB.velocity.x, Mathf.Clamp(rB.velocity.y, -wallSlideSpeed, 5));
+        }
     }
 
     private void SeeRays(RaycastHit2D leftCheckHit, RaycastHit2D rightCheckHit)

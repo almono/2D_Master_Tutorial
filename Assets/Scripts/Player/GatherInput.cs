@@ -16,6 +16,7 @@ public class GatherInput : MonoBehaviour
     public float valueY;
     public bool tryingToClimb;
     private bool isPaused = false;
+    public bool tryToWalSlide;
 
     void Awake()
     {
@@ -63,11 +64,20 @@ public class GatherInput : MonoBehaviour
     private void StartMove(InputAction.CallbackContext ctx)
     {
         valueX = ctx.ReadValue<float>();
+
+        if(valueX > 0.1f)
+        {
+            tryToWalSlide = true;
+        } else if (valueX < 0 && valueX >= -1)
+        {
+            tryToWalSlide = true;
+        }
     }
 
     private void StopMove(InputAction.CallbackContext ctx)
     {
         valueX = 0;
+        tryToWalSlide = false;
     }
 
     private void JumpStart(InputAction.CallbackContext ctx)
