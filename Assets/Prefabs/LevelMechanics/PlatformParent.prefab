@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 3906317930817117756}
   - component: {fileID: 3204469340843173933}
   - component: {fileID: 3755391577550428735}
+  - component: {fileID: 2233008377637830047}
   m_Layer: 7
   m_Name: MovingPlatform
   m_TagString: Untagged
@@ -203,6 +204,36 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
+--- !u!114 &2233008377637830047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3905517360688675737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: cf98ca6bdfe6ec350000000003654adc35bd47cf1b341a5b0ba83773
+  m_ShapePath:
+  - {x: -0.9381919, y: -0.31738496, z: 0}
+  - {x: -0.9775243, y: 0.04205799, z: 0}
+  - {x: 0.97174203, y: 0.042035103, z: 0}
+  - {x: 0.9494297, y: -0.33143234, z: 0}
+  m_ShapePathHash: 653206528
+  m_Mesh: {fileID: 0}
+  m_InstanceId: -6996
+  m_LocalBounds:
+    m_Center: {x: -0.0028911233, y: -0.14468718, z: 0}
+    m_Extent: {x: 0.97463316, y: 0.18674517, z: 0}
 --- !u!1 &4939480977351786619
 GameObject:
   m_ObjectHideFlags: 0

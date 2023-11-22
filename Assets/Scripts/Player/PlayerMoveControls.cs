@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerMoveControls : MonoBehaviour
 {
-    public float speed = 4f, jumpForce;
+    public float speed = 4f, jumpForce, jumpTimer = 0.2f; // jump timer is time between jumps
     private int isFacingRight = -1;
 
     private GatherInput gI;
@@ -15,6 +15,8 @@ public class PlayerMoveControls : MonoBehaviour
     public float rayLength = 0.05f;
     public LayerMask groundLayer;
     public Transform leftPoint, rightPoint;
+
+    [SerializeField]
     private bool grounded = true;
     public bool isKnockbacked = false;
     public bool hasControl = true;
@@ -85,19 +87,26 @@ public class PlayerMoveControls : MonoBehaviour
 
     void Jump()
     {
-        if (gI.jumpInput)
+        if (gI.jumpInput && jumpTimer <= 0f)
         {
             if (grounded || onLadder)
             {
+                jumpTimer = 0.2f;
                 ExitLadder();
                 rB.velocity = new Vector2(gI.valueX * speed, jumpForce);
             } else if (additionalJumps > 0)
             {
-                ExitLadder();
-                rB.velocity = new Vector2(gI.valueX * speed, jumpForce * 0.6f);
                 additionalJumps--;
+                jumpTimer = 0.2f;
+                ExitLadder();
+                rB.velocity = new Vector2(gI.valueX * speed, jumpForce * 0.8f);
             }
 
+        }
+
+        if (jumpTimer > 0)
+        {
+            jumpTimer -= Time.deltaTime;
         }
 
         gI.jumpInput = false; // no need to wait for player to stop pressing spacebar
