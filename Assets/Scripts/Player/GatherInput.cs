@@ -17,6 +17,7 @@ public class GatherInput : MonoBehaviour
     public bool tryingToClimb;
     private bool isPaused = false;
     public bool tryToWalSlide;
+    public bool tryToCrouch;
 
     void Awake()
     {
@@ -37,6 +38,9 @@ public class GatherInput : MonoBehaviour
         playerControls.Player.Climb.performed += ClimbStart;
         playerControls.Player.Climb.canceled += StopClimbing;
 
+        playerControls.Player.Crouch.performed += TryToCrouch;
+        playerControls.Player.Crouch.canceled += StopCrouch;
+
         playerControls.Player.Pause.performed += PauseGame;
 
         playerControls.Player.Enable();
@@ -55,6 +59,9 @@ public class GatherInput : MonoBehaviour
 
         playerControls.Player.Climb.performed -= ClimbStart;
         playerControls.Player.Climb.canceled -= StopClimbing;
+
+        playerControls.Player.Crouch.performed -= TryToCrouch;
+        playerControls.Player.Crouch.canceled -= StopCrouch;
 
         playerControls.Player.Pause.performed -= PauseGame;
 
@@ -118,6 +125,16 @@ public class GatherInput : MonoBehaviour
         valueY = 0;
     }
 
+    private void TryToCrouch(InputAction.CallbackContext ctx)
+    {
+        tryToCrouch = true;
+    }
+
+    private void StopCrouch(InputAction.CallbackContext ctx)
+    {
+        tryToCrouch = false;
+    }
+
     public void DisableControls()
     {
         playerControls.Player.Move.performed -= StartMove;
@@ -131,6 +148,9 @@ public class GatherInput : MonoBehaviour
 
         playerControls.Player.Climb.performed -= ClimbStart;
         playerControls.Player.Climb.canceled -= StopClimbing;
+
+        playerControls.Player.Crouch.performed -= TryToCrouch;
+        playerControls.Player.Crouch.canceled -= StopCrouch;
 
         playerControls.Player.Disable();
         valueX = 0;

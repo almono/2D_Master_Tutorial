@@ -44,12 +44,27 @@ public class PlayerMoveControls : MonoBehaviour
     public float wallJumpForceX = 8f, wallJumpForceY = 8f;
     RaycastHit2D wallSlideHit;
 
+    [Header("Crouching")]
+    public bool crouch;
+    [SerializeField] private bool forceCrouch;
+    private bool headCheck;
+    public Transform headCheckPos;
+    public float headCheckRadius;
+    public CapsuleCollider2D standCol;
+    public PolygonCollider2D standStatsCol;
+    public BoxCollider2D crouchCol;
+    public BoxCollider2D crouchStatsCol;
+
+    private PlayerAttackControls playerAttackControls;
+
     // Start is called before the first frame update
     void Start()
     {
         gI = GetComponent<GatherInput>();
         rB = GetComponent<Rigidbody2D>();
         playerAnim = GetComponent<Animator>();
+        playerAttackControls = GetComponent<PlayerAttackControls>();
+
         startGravity = rB.gravityScale;
 
         resetJumpsNumber = additionalJumps;
@@ -60,12 +75,12 @@ public class PlayerMoveControls : MonoBehaviour
     void Update()
     {
         SetAnimatorValues();
+        CrouchPlayerConditions();
+        CheckStatus();
     }
 
     void FixedUpdate()
     {
-        CheckStatus();
-
         if(!isKnockbacked && hasControl)
         {
             Move();
@@ -175,6 +190,7 @@ public class PlayerMoveControls : MonoBehaviour
         playerAnim.SetFloat("vspeed", rB.velocity.y);
         playerAnim.SetBool("grounded", grounded);
         playerAnim.SetBool("isClimbing", onLadder);
+        playerAnim.SetBool("isCrouching", crouch);
         //playerAnim.SetBool("isWallSliding", isWallSliding);
     }
 
@@ -190,6 +206,17 @@ public class PlayerMoveControls : MonoBehaviour
         } else
         {
             grounded = false;
+        }
+
+        headCheck = Physics2D.OverlapCircle(headCheckPos.position, headCheckRadius, groundLayer);
+
+        if(headCheck && grounded)
+        {
+            forceCrouch = true;
+        } else
+        {
+            forceCrouch = false;
+            //crouch = false;
         }
 
         wallSlideHit = Physics2D.Raycast(wallSlidePoint.position, isFacingRight * Vector2.right, 0.1f, groundLayer);
@@ -211,6 +238,30 @@ public class PlayerMoveControls : MonoBehaviour
         SeeRays(leftCheckHit, rightCheckHit);
     }
 
+    private void CrouchPlayerConditions()
+    {
+        if(gI.tryToCrouch)
+        {
+            if(grounded && !playerAttackControls.attackStarted && !onLadder)
+            {
+                crouch = true;
+                standCol.enabled = false;
+                standStatsCol.enabled = false;
+
+                crouchCol.enabled = true;
+                crouchStatsCol.enabled = true;
+            }
+        } else if(!forceCrouch)
+        {
+            crouch = false;
+            standCol.enabled = true;
+            standStatsCol.enabled = true;
+
+            crouchCol.enabled = false;
+            crouchStatsCol.enabled = false;
+        }
+    }
+
     private void WallSlide()
     {
         if(isWallSliding)
@@ -224,7 +275,6 @@ public class PlayerMoveControls : MonoBehaviour
         if (wallJumpActive)
         {
             rB.velocity = new Vector2(-wallJumpDirection * wallJumpForceX, wallJumpForceY);
-            Debug.Log("TEST");
         }
     }
 
