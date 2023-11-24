@@ -20,18 +20,29 @@ public class PlayerMoveControls : MonoBehaviour
     public bool isKnockbacked = false;
     public bool hasControl = true;
 
+    [Header("Climbing")]
     public bool onLadder = false;
     public float climbSpeed = 3f;
     public float climbHorizontalSpeed = 1f;
+    private float startGravity;
 
+    [Header("Extra Jumps")]
     public int additionalJumps = 3;
     private int resetJumpsNumber;
 
-    private float startGravity;
-
+    [Header("Wall slide")]
     public Transform wallSlidePoint;
     public float wallSlideSpeed = 2f;
     [SerializeField]  private bool isWallSliding = false;
+
+    [Header("Walljump")]
+    [SerializeField] private bool wallJumpActive;
+    private bool wallJumpOneTime;
+    public float wallJumpTimer = 0.2f;
+    private float startWallJumpTimer;
+    private int wallJumpDirection;
+    public float wallJumpForceX = 8f, wallJumpForceY = 8f;
+    RaycastHit2D wallSlideHit;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +53,7 @@ public class PlayerMoveControls : MonoBehaviour
         startGravity = rB.gravityScale;
 
         resetJumpsNumber = additionalJumps;
+        startWallJumpTimer = wallJumpTimer;
     }
 
     // Update is called once per frame
@@ -59,11 +71,18 @@ public class PlayerMoveControls : MonoBehaviour
             Move();
             WallSlide();
             Jump();
+            WallJump();
         }
     }
 
     void Move()
     {
+        // restrict movement is wall jump is active
+        if(wallJumpActive)
+        {
+            return;
+        }
+
         Flip();
         rB.velocity = new Vector2(speed * gI.valueX, rB.velocity.y);
 
@@ -98,19 +117,38 @@ public class PlayerMoveControls : MonoBehaviour
                 jumpTimer = 0.2f;
                 ExitLadder();
                 rB.velocity = new Vector2(gI.valueX * speed, jumpForce);
-            } else if (additionalJumps > 0)
+            } else if (additionalJumps > 0 && !wallSlideHit)
             {
                 additionalJumps--;
                 jumpTimer = 0.2f;
                 ExitLadder();
                 rB.velocity = new Vector2(gI.valueX * speed, jumpForce * 0.8f);
             }
-
+            // wall jumping
+            else if(!wallJumpOneTime && wallSlideHit)
+            {
+                wallJumpActive = true; 
+                wallJumpOneTime = true;
+                wallJumpDirection = (-1 * isFacingRight);
+                wallJumpTimer = startWallJumpTimer;
+                ForceFlip();
+            }
+        } else
+        {
+            wallJumpOneTime = false;
         }
 
         if (jumpTimer > 0)
         {
             jumpTimer -= Time.deltaTime;
+        }
+
+        if(wallJumpActive == true && wallJumpTimer >= 0) 
+        { 
+            wallJumpTimer -= Time.deltaTime;
+        } else if (wallJumpTimer <= 0)
+        {
+            wallJumpActive = false;
         }
 
         gI.jumpInput = false; // no need to wait for player to stop pressing spacebar
@@ -123,6 +161,12 @@ public class PlayerMoveControls : MonoBehaviour
             transform.localScale = new Vector3(-transform.localScale.x, 1, 1);
             isFacingRight *= -1;
         }
+    }
+
+    void ForceFlip()
+    {
+        transform.localScale = new Vector3(-transform.localScale.x, 1, 1);
+        isFacingRight *= -1;
     }
 
     private void SetAnimatorValues()
@@ -148,7 +192,7 @@ public class PlayerMoveControls : MonoBehaviour
             grounded = false;
         }
 
-        RaycastHit2D wallSlideHit = Physics2D.Raycast(wallSlidePoint.position, isFacingRight * Vector2.right, 0.1f, groundLayer);
+        wallSlideHit = Physics2D.Raycast(wallSlidePoint.position, isFacingRight * Vector2.right, 0.1f, groundLayer);
 
         if(wallSlideHit && !grounded)
         {
@@ -172,6 +216,15 @@ public class PlayerMoveControls : MonoBehaviour
         if(isWallSliding)
         {
             rB.velocity = new Vector2(rB.velocity.x, Mathf.Clamp(rB.velocity.y, -wallSlideSpeed, 5));
+        }
+    }
+
+    private void WallJump()
+    {
+        if (wallJumpActive)
+        {
+            rB.velocity = new Vector2(-wallJumpDirection * wallJumpForceX, wallJumpForceY);
+            Debug.Log("TEST");
         }
     }
 

@@ -577,6 +577,10 @@ MonoBehaviour:
   wallSlidePoint: {fileID: 5702167171180269002}
   wallSlideSpeed: 2
   isWallSliding: 0
+  wallJumpActive: 0
+  wallJumpTimer: 0.2
+  wallJumpForceX: 3
+  wallJumpForceY: 7
 --- !u!114 &6196107305872468472
 MonoBehaviour:
   m_ObjectHideFlags: 0
