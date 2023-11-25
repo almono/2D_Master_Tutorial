@@ -194,4 +194,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToDestroy: 3
-  currentHealth: 0
+  currentHealth: 2

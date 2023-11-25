@@ -172,4 +172,15 @@ public class GatherInput : MonoBehaviour
             playerControls.Player.Enable();
         }
     }
+
+    public void DisableInput()
+    {
+        playerControls.Player.Disable();
+        valueX = 0;
+    }
+
+    public void EnableInput()
+    {
+        playerControls.Player.Enable();
+    }
 }
